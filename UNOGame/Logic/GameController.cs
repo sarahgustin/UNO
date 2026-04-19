@@ -7,14 +7,16 @@ class GameController
 {
     //dictionary player dan list kartu di hand
     private readonly Dictionary<IPlayer, List<ICard>> _players;
-    private bool _isClockWise = true;
+    private bool _isClockWise;
     private IPlayer _currentPlayer;
     private IDeck _gameDeck;
     private IBoard _gameBoard;
 
-   // public event EventHandler OnDeckEmpty;
-   // public event EventHandler OnPlayerRunOurCard;
+   public event EventHandler OnDeckEmpty;
+   public event EventHandler OnPlayerRunOutCard;
+   public delegate void GameEndHandler(IPlayer winner);
 
+   
     //Constructor
     public GameController(List<IPlayer> players , IDeck deck, IBoard board)
     {
@@ -36,13 +38,14 @@ class GameController
     }
 
     public List<IPlayer> GetPlayerList(){//untuk ambil data pemain dari list player, key pemain untuk dapat mengakses kartu 
-        var PlayersKeys = _players.Keys;
+        var playersKeys = _players.Keys;
 
-        List<IPlayer> players = PlayersKeys.ToList();
+        List<IPlayer> players = playersKeys.ToList();
 
         return players;
 
-    }//mengembalikan value List<Player
+    }//mengembalikan value List<Player 
+    //
 
     public List<ICard> GetCurrentPlayerHand() => _players[_currentPlayer];
     public IPlayer GetCurrentPlayer() => _currentPlayer;
@@ -147,19 +150,30 @@ class GameController
             int k = rng.Next (n+1);
 
             //tukar posisi card
-            ICard value = deck.Cards[k];
+            /*ICard value = deck.Cards[k];
             deck.Cards[k] = deck.Cards[n];
-            deck.Cards[n] = value;
+            deck.Cards[n] = value;*/
+            (deck.Cards[k], deck.Cards[n]) = (deck.Cards[n], deck.Cards[k]);
         }
     }
     private void RefillDeck(IDeck deck, IBoard board)
     {
         //ambil kartu paling atas dari used card di board biar ngga ke bawa masuk ke card di deck
-        ICard TopCardAtBoard = GetTopCard(board);
+        ICard topCardAtBoard = GetTopCard(board);
 
         //hapus topcard dari used card
-        board.UsedCards.Remove(TopCardAtBoard);
-
+        board.UsedCards.Remove(topCardAtBoard);
+        
+        // reset warna wildcard
+        foreach (var card in board.UsedCards)
+        {
+            if (card.CardType == CardType.Wild || card.CardType == CardType.WildDraw)
+            {
+                // Balikin ke warna hitam
+                card.CardColor = CardColor.Black; 
+            }
+        }
+        
         //masukin semua sisa cards yang ada di usedcard ke deck
         deck.Cards.AddRange(board.UsedCards);
 
@@ -167,18 +181,116 @@ class GameController
         board.UsedCards.Clear();
 
         //simpan topcard di board
-        board.UsedCards.Add(TopCardAtBoard);
+        board.UsedCards.Add(topCardAtBoard);
 
         ShuffleDeck(deck);
     }
-
     
-    public void PlayerTurn(IBoard board){}
-    public void PlacedCard(ICard card, IBoard board){}
-    public bool IsPlaceableOnTop(ICard card, IBoard board) => true;
-    public int PlayerHandCount(IPlayer player) => 0;
+    public void PlayerTurn(IBoard board)
+    {
+        //current player
+        IPlayer currentPlayer = _currentPlayer;
+        //getcurrent hand
+        List<ICard> playerHand = _players[currentPlayer];
+        GetTopCard(board);
+        
+        //cek di tangan ada kartu yang valid atau ngga
+        bool canPlay = false;
+        ICard selectedCard = null;
 
+        foreach (var card in playerHand)
+        {
+            if (IsPlaceableOnTop(card, board))
+            {
+                canPlay = true;
+                selectedCard = card;
+            }
+        }
 
+        if (canPlay)
+        {
+            PlacedCard(selectedCard, board);
+        }
+        else
+        {
+            //panggil drawcard untuk ambi 1 kartu ketika kartu ditangan ngga ada yg valid
+            ICard newCard = DrawCard(_gameDeck);
+            //tambah 1 kartu ke tangan
+            playerHand.Add(newCard);
+            
+            //cek lagi kartu yang udah di ambil di cek lagi valid ngga untuk PlaceCard
+            if (IsPlaceableOnTop(newCard, board))
+            {
+                PlacedCard(newCard, board);
+            }
+        }
+        _currentPlayer = GetNextPlayer();
+    }
+
+    public void PlacedCard(ICard card, IBoard board)
+    {
+        IPlayer currentPlayer = _currentPlayer;
+        //hapus card dari hand player
+        _players[currentPlayer].Remove(card);
+         
+        //add card ke board.UsedCards
+        board.UsedCards.Add(card);
+        
+        //ambil warna dari topcard
+        ICard topColor = GetTopCard(board);
+        topColor.CardColor = card.CardColor;
+
+        //untuk panggil method card behavior 
+        if (card.CardType != CardType.WildDraw && card.CardType != CardType.WildDraw)
+        {
+            //if cardtype (skip, reverese, dan kartu)
+            if (card.CardType == CardType.Reverse)
+            {
+                ReverseDirection();
+            }else if (card.CardType == CardType.Skip)
+            {
+                SkipNextPlayer();
+            }else if (card.CardType == CardType.Draw)
+            {
+                DrawPenalty(2, _gameDeck, GetNextPlayer());
+                SkipNextPlayer();
+            }
+            _currentPlayer = GetNextPlayer();
+        }
+        //kalo cardtype wild/wilddraw panggil UI untuk pilih color
+        else
+        {
+            //UI pilih warna
+
+        }
+        
+        //if player handcount udah abis panggil EndGame()
+        if (_players[_currentPlayer].Count == 0)
+        {
+            GameEnd(_currentPlayer);
+            return;
+           
+        }
+    }
+    public bool IsPlaceableOnTop(ICard card, IBoard board)
+    {
+        //ambil topcard nya
+        ICard topCard = GetTopCard(board);
+        
+        //Return cardtype nya sama atau ngga 
+        return card.CardColor == topCard.CardColor || 
+               card.CardType == topCard.CardType ||
+               card.CardType == CardType.Wild ||
+               card.CardType == CardType.WildDraw;
+    }
+    public int PlayerHandCount(IPlayer player)
+    { 
+        return _players[player].Count;
+    }
+    
    /*ENDGAME*/
-    private void GameEnd(IPlayer winner){}
+   private void GameEnd(IPlayer winner)
+   {
+       //OnPlayerRunOutCard;?.Invoke(winner);
+   }
 }
