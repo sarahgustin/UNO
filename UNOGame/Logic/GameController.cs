@@ -1,3 +1,4 @@
+using System;
 using UNOGame.Enums;
 using UNOGame.Models;
 
@@ -12,10 +13,10 @@ class GameController
     private IDeck _gameDeck;
     private IBoard _gameBoard;
 
-   public event EventHandler OnDeckEmpty;
-   public event EventHandler OnPlayerRunOutCard;
-   public delegate void GameEndHandler(IPlayer winner);
+   public event Action OnDeckEmpty = delegate { }; 
 
+   public delegate void GameEndHandler(IPlayer winner);
+   public event GameEndHandler OnPlayerRunOutCard = delegate { };
    
     //Constructor
     public GameController(List<IPlayer> players , IDeck deck, IBoard board)
@@ -45,7 +46,7 @@ class GameController
         return players;
 
     }//mengembalikan value List<Player 
-    //
+   
 
     public List<ICard> GetCurrentPlayerHand() => _players[_currentPlayer];
     public IPlayer GetCurrentPlayer() => _currentPlayer;
@@ -126,7 +127,9 @@ class GameController
     {
         if(deck.Cards.Count == 0)
         {
-            RefillDeck(_gameDeck, _gameBoard);
+            OnDeckEmpty?.Invoke();
+            RefillDeck(_gameDeck, _gameBoard); 
+    
         }
         //ambil kartu dari list card di deck yang paling atas card[0]
         ICard drawnCard = deck.Cards [0];
@@ -291,6 +294,6 @@ class GameController
    /*ENDGAME*/
    private void GameEnd(IPlayer winner)
    {
-       //OnPlayerRunOutCard;?.Invoke(winner);
+       OnPlayerRunOutCard?.Invoke(winner);
    }
 }
