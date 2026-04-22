@@ -1,10 +1,11 @@
 using System;
 using UNOGame.Enums;
 using UNOGame.Models;
+using UNOGame.UI;
 
 namespace UNOGame.Logic;
 
-class GameController
+public class GameController
 {
     //dictionary player dan list kartu di hand
     private readonly Dictionary<IPlayer, List<ICard>> _players;
@@ -31,11 +32,17 @@ class GameController
         foreach (var player in players)
         {
             _players.Add(player, new List<ICard>());
+
+            //masukin kartu ke tangan, 7 kartu untuk mulai permainan
+            for (int i = 0; i < 7; i++)
+            {
+                _players[player].Add(DrawCard(deck));
+            }
         }
-
         _currentPlayer = players[0];
-
         _isClockWise = true;
+        _gameBoard.UsedCards.Add(DrawCard(deck));
+
     }
 
     public List<IPlayer> GetPlayerList(){//untuk ambil data pemain dari list player, key pemain untuk dapat mengakses kartu 
@@ -95,7 +102,7 @@ class GameController
         _currentPlayer = GetNextPlayer();
     }
 
-    private void Wild(CardColor newColor)
+    public void Wild(CardColor newColor)
     {
         //ambil top card yang ada di board
         ICard topCard = GetTopCard(_gameBoard);
@@ -189,45 +196,44 @@ class GameController
         ShuffleDeck(deck);
     }
     
-    public void PlayerTurn(IBoard board)
+    public void PlayerTurn(IBoard board, int? choice = null)
     {
         //current player
         IPlayer currentPlayer = _currentPlayer;
         //getcurrent hand
         List<ICard> playerHand = _players[currentPlayer];
-        GetTopCard(board);
         
         //cek di tangan ada kartu yang valid atau ngga
-        bool canPlay = false;
-        ICard selectedCard = null;
+        bool canPlay = playerHand.Any(card => IsPlaceableOnTop(card, board));
 
-        foreach (var card in playerHand)
-        {
-            if (IsPlaceableOnTop(card, board))
-            {
-                canPlay = true;
-                selectedCard = card;
-            }
-        }
 
-        if (canPlay)
-        {
-            PlacedCard(selectedCard, board);
-        }
-        else
+        if (!canPlay)
         {
             //panggil drawcard untuk ambi 1 kartu ketika kartu ditangan ngga ada yg valid
             ICard newCard = DrawCard(_gameDeck);
             //tambah 1 kartu ke tangan
             playerHand.Add(newCard);
-            
-            //cek lagi kartu yang udah di ambil di cek lagi valid ngga untuk PlaceCard
+
             if (IsPlaceableOnTop(newCard, board))
             {
                 PlacedCard(newCard, board);
             }
+            _currentPlayer = GetNextPlayer();
+
         }
-        _currentPlayer = GetNextPlayer();
+        else if(choice.HasValue)
+        {
+            int index = choice.Value - 1; 
+            if (index >= 0 && index < playerHand.Count)
+            {
+                ICard seletectedCard = playerHand[index];
+                if (IsPlaceableOnTop(seletectedCard, board))
+                {
+                    PlacedCard(seletectedCard, board);
+                }
+            }
+        }
+
     }
 
     public void PlacedCard(ICard card, IBoard board)
@@ -263,14 +269,14 @@ class GameController
         //kalo cardtype wild/wilddraw panggil UI untuk pilih color
         else
         {
-            //UI pilih warna
+            //panggil ui untuk show color dan ambilpilihan color
 
         }
         
         //if player handcount udah abis panggil EndGame()
-        if (_players[_currentPlayer].Count == 0)
+        if (_players[currentPlayer].Count == 0)
         {
-            GameEnd(_currentPlayer);
+            GameEnd(currentPlayer);
             return;
            
         }
