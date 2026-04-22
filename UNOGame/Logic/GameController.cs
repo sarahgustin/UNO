@@ -1,9 +1,10 @@
+using System;
 using UNOGame.Enums;
 using UNOGame.Models;
 
 namespace UNOGame.Logic;
 
-public class GameController
+class GameController
 {
     //dictionary player dan list kartu di hand
     private readonly Dictionary<IPlayer, List<ICard>> _players;
@@ -11,12 +12,7 @@ public class GameController
     private IPlayer _currentPlayer;
     private IDeck _gameDeck;
     private IBoard _gameBoard;
-    
-    //buat kasih message ke player kalo mereka dapet kartu draw
-    private string _gameDrawMessage;
-    
-    //event baru buat pilih warna
-    public Func<CardColor> OnRequestColorSelection ;
+
    public event Action OnDeckEmpty = delegate { }; 
 
    public delegate void GameEndHandler(IPlayer winner);
@@ -35,43 +31,14 @@ public class GameController
         foreach (var player in players)
         {
             _players.Add(player, new List<ICard>());
-
-            //masukin kartu ke tangan, 7 kartu untuk mulai permainan
-            for (int i = 0; i < 7; i++)
-            {
-                _players[player].Add(DrawCard(deck));
-            }
         }
+
         _currentPlayer = players[0];
+
         _isClockWise = true;
-        _gameBoard.UsedCards.Add(DrawCard(deck));
-
     }
 
-    //bikin method baru tambah kartu ke list card 
-    /*
-    public static List<ICard> GenerateFullDeck(List<ICard> cards)
-    {
-        List<ICard> fullDeck = new List<ICard>();
-        CardColor[] cardColor = { CardColor.Red, CardColor.Blue, CardColor.Green, CardColor.Yellow };
-
-        foreach (var color in cardColor)
-        {
-            //masukin kartu warna 0, 1 kartu perwarna
-            fullDeck.Add(new Card(color, CardType.Zero));
-            
-            //masukin kartu 1-9 untuk tiap warna
-            for (int i = 1; i <= 9; i++)
-            {
-                fullDeck.Add(new Card(i, color, (CardType)i));
-                fullDeck.Add(new Card(i, color, (CardType)i));
-            }
-        }
-    }
-*/
-
-    //untuk ambil data pemain dari list player, key pemain untuk dapat mengakses kartu
-    public List<IPlayer> GetPlayerList(){ 
+    public List<IPlayer> GetPlayerList(){//untuk ambil data pemain dari list player, key pemain untuk dapat mengakses kartu 
         var playersKeys = _players.Keys;
 
         List<IPlayer> players = playersKeys.ToList();
@@ -79,6 +46,7 @@ public class GameController
         return players;
 
     }//mengembalikan value List<Player 
+   
 
     public List<ICard> GetCurrentPlayerHand() => _players[_currentPlayer];
     public IPlayer GetCurrentPlayer() => _currentPlayer;
@@ -115,26 +83,8 @@ public class GameController
     public IDeck GetDeck() =>_gameDeck;
     public IBoard GetBoard() =>_gameBoard;
     public bool GetIsClockwise() => _isClockWise;
+    
 
-    public void LogDrawActivity(IPlayer player, int count, string reason)
-    {
-        if (count == 1)
-        {
-            _gameDrawMessage = $"{player.Name} {reason}, mendapatkan {count} kartu draw";
-        }
-        else
-        {
-            _gameDrawMessage = $"{player.Name} kena {reason}, mendapatkan {count} kartu!";
-        }
-    }
-    
-    public string GetLatestActivity() 
-    {
-        string temp = _gameDrawMessage;
-        _gameDrawMessage = null; // Dihapus setelah diambil biar gak muncul terus
-        return temp;
-    }
-    
     /*Card Behavior*/
     private void ReverseDirection()
     {
@@ -145,7 +95,7 @@ public class GameController
         _currentPlayer = GetNextPlayer();
     }
 
-    public void Wild(CardColor newColor)
+    private void Wild(CardColor newColor)
     {
         //ambil top card yang ada di board
         ICard topCard = GetTopCard(_gameBoard);
@@ -158,7 +108,6 @@ public class GameController
             DrawPenalty(4, _gameDeck, GetNextPlayer());
 
             SkipNextPlayer();
-            LogDrawActivity(GetNextPlayer(), 4, "Draw Penalty +4");
         }
 
         _currentPlayer = GetNextPlayer();
@@ -240,45 +189,45 @@ public class GameController
         ShuffleDeck(deck);
     }
     
-    public void PlayerTurn(IBoard board, int? choice = null)
+    public void PlayerTurn(IBoard board)
     {
         //current player
         IPlayer currentPlayer = _currentPlayer;
         //getcurrent hand
         List<ICard> playerHand = _players[currentPlayer];
+        GetTopCard(board);
         
         //cek di tangan ada kartu yang valid atau ngga
-        bool canPlay = playerHand.Any(card => IsPlaceableOnTop(card, board));
+        bool canPlay = false;
+        ICard selectedCard = null;
 
+        foreach (var card in playerHand)
+        {
+            if (IsPlaceableOnTop(card, board))
+            {
+                canPlay = true;
+                selectedCard = card;
+            }
+        }
 
-        if (!canPlay)
+        if (canPlay)
+        {
+            PlacedCard(selectedCard, board);
+        }
+        else
         {
             //panggil drawcard untuk ambi 1 kartu ketika kartu ditangan ngga ada yg valid
             ICard newCard = DrawCard(_gameDeck);
             //tambah 1 kartu ke tangan
             playerHand.Add(newCard);
-            LogDrawActivity(currentPlayer, 1, "Gak ada kartu cocok");
-
+            
+            //cek lagi kartu yang udah di ambil di cek lagi valid ngga untuk PlaceCard
             if (IsPlaceableOnTop(newCard, board))
             {
                 PlacedCard(newCard, board);
             }
-            _currentPlayer = GetNextPlayer();
-
         }
-        else if(choice.HasValue)
-        {
-            int index = choice.Value - 1; 
-            if (index >= 0 && index < playerHand.Count)
-            {
-                ICard seletectedCard = playerHand[index];
-                if (IsPlaceableOnTop(seletectedCard, board))
-                {
-                    PlacedCard(seletectedCard, board);
-                }
-            }
-        }
-
+        _currentPlayer = GetNextPlayer();
     }
 
     public void PlacedCard(ICard card, IBoard board)
@@ -307,27 +256,23 @@ public class GameController
             }else if (card.CardType == CardType.Draw)
             {
                 DrawPenalty(2, _gameDeck, GetNextPlayer());
-                LogDrawActivity(GetNextPlayer(), 2, "Penalty +2");
                 SkipNextPlayer();
             }
             _currentPlayer = GetNextPlayer();
         }
-        //kalo cardtype wild/wilddraw panggil UI untuk pilih color. PAKE EVENT
+        //kalo cardtype wild/wilddraw panggil UI untuk pilih color
         else
         {
-            if (OnRequestColorSelection != null)
-            {
-                CardColor chosenColor = OnRequestColorSelection.Invoke();
-                Wild(chosenColor);
-            }
+            //UI pilih warna
 
         }
         
         //if player handcount udah abis panggil EndGame()
-        if (_players[currentPlayer].Count == 0)
+        if (_players[_currentPlayer].Count == 0)
         {
-            GameEnd(currentPlayer);
+            GameEnd(_currentPlayer);
             return;
+           
         }
     }
     public bool IsPlaceableOnTop(ICard card, IBoard board)
