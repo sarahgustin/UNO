@@ -7,6 +7,8 @@ namespace UNOGame.UI;
 public class ConsoleDisplay
 {
     //show menu
+
+    
     public static int ShowMenu()
     {
         Console.WriteLine("");
@@ -20,7 +22,7 @@ public class ConsoleDisplay
         
     }
     //initialize player
-    /*
+    
     public static List <IPlayer> InitPlayer()
     {
         List<IPlayer> players = new List<IPlayer>();
@@ -41,8 +43,9 @@ public class ConsoleDisplay
             players.Add(new Player(name));
         }
         return players;
-    }*/
+    
 
+/*
     public static List<IPlayer> InitPlayer()
     {
         
@@ -71,7 +74,7 @@ public class ConsoleDisplay
         }
 
         return players;
-    }
+    }*/
     
     //showheader
     public static void ShowHeader(GameController gc, IBoard board)
