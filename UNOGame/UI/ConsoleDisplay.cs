@@ -7,7 +7,9 @@ namespace UNOGame.UI;
 public class ConsoleDisplay
 {
     //show menu
-    public static void ShowMenu()
+
+    
+    public static int ShowMenu()
     {
         Console.WriteLine("");
         Console.WriteLine("==================================");
@@ -15,33 +17,22 @@ public class ConsoleDisplay
         Console.WriteLine("==================================");
         Console.WriteLine("1. Start Game");
         Console.WriteLine("2. Exit");
-        Console.WriteLine("Masukkan Pilihan : ");
-        int pilihan = Convert.ToInt32(Console.ReadLine());
+        Console.WriteLine("Masukkan Pilihan : ");        
+        return Convert.ToInt32(Console.ReadLine());
         
-        switch (pilihan)
-        {
-            case 1 :  
-                InitPlayer();
-                break;
-            case 2 :
-                Environment.Exit(0);
-                break;
-            default : 
-                Console.WriteLine("Pilihan Tidak Valid!");
-                break;
-        }
     }
     //initialize player
+    
     public static List <IPlayer> InitPlayer()
     {
         List<IPlayer> players = new List<IPlayer>();
         
-        
-        Console.WriteLine("Masukkan Jumlah Player (2-4): ");
-        int.TryParse(Console.ReadLine(), out int count);
-
-        if (count < 2) count = 2;
-        if (count > 4) count = 4;
+        int count = 0;
+        while (count < 2 || count > 4) // Syarat minimal 2, maksimal 4
+        {
+            Console.Write("Masukkan jumlah pemain (2-4): ");
+            int.TryParse(Console.ReadLine(), out count);
+        }
         
         //masukin player yang assgin ke list player.
         for (int i = 1; i <= count; i++)
@@ -52,10 +43,41 @@ public class ConsoleDisplay
             players.Add(new Player(name));
         }
         return players;
-    }
+    
+
+/*
+    public static List<IPlayer> InitPlayer()
+    {
+        
+        int count = 0;
+        // LOOP UTAMA: Akan terus bertanya selama input bukan 2, 3, atau 4
+        while (true) 
+        {
+            Console.Write("Masukkan jumlah pemain (2-4): ");
+            string input = Console.ReadLine()??"";
+
+            if (int.TryParse(input, out count) && count >= 2 && count <= 4)
+            {
+                // Jika input beneran angka dan antara 2-4, keluar dari loop
+                break; 
+            }
+
+            Console.WriteLine("Input Salah! Pemain hanya bisa 2, 3, atau 4.");
+        }
+
+        List<IPlayer> players = new List<IPlayer>();
+        for (int i = 1; i <= count; i++)
+        {
+            Console.Write($"Masukkan nama pemain {i}: ");
+            string name = Console.ReadLine()??"";
+            players.Add(new Player(name));
+        }
+
+        return players;
+    }*/
     
     //showheader
-    public void ShowHeader(GameController gc, IBoard board)
+    public static void ShowHeader(GameController gc, IBoard board)
     {
         //gettopcard
         ICard topCard = gc.GetTopCard(board);
@@ -74,7 +96,7 @@ public class ConsoleDisplay
     }
     
     //show player stats
-    public void ShowPlayerStats(GameController gc)
+    public static void ShowPlayerStats(GameController gc)
     {
         //getplayerlist
         List<IPlayer> players = gc.GetPlayerList();
@@ -89,7 +111,7 @@ public class ConsoleDisplay
     }
     
     //show player hand card
-    public void ShowHand(GameController gc)
+    public static void ShowHand(GameController gc)
     {
         //getplayerhand.currentplayer
         List<ICard> playerCards = gc.GetCurrentPlayerHand();
@@ -104,6 +126,7 @@ public class ConsoleDisplay
     }
     public static int GetPlayerChoice(int handCount)
     {
+       
         //bikin conditonal dari pilihan player, passing ke playerturn
         while (true)
         {
@@ -126,7 +149,7 @@ public class ConsoleDisplay
         Console.ReadLine(); 
     }
     //show color pick
-    public static CardColor ShowColorPick (GameController gc)
+    public static CardColor ShowColorPick ()
     {
         Console.WriteLine("Pilih Warna");
         Console.WriteLine("1. Red");
