@@ -7,8 +7,6 @@ namespace UNOGame.UI;
 public class ConsoleDisplay
 {
     //show menu
-
-    
     public static int ShowMenu()
     {
         Console.WriteLine("");
@@ -43,12 +41,13 @@ public class ConsoleDisplay
         }
         return players;
     }
-    
-    public static string GetCardLabel(ICard card)
+
+    private static string GetCardLabel(ICard card)
     {
-        // Kalau 0-9, return angkanya. Kalau >= 10, return nama aslinya (Skip, Wild, reverse)
+        //Kalau 0-9, return angkanya. Kalau >= 10, return nama aslinya (Skip, Wild, reverse)
         return (int)card.CardType < 10 ? ((int)card.CardType).ToString() : card.CardType.ToString();
     }
+    
     //showheader
     public static void ShowHeader(GameController gc, IBoard board, IDeck deck)
     {
@@ -75,11 +74,11 @@ public class ConsoleDisplay
         //getplayerlist
         List<IPlayer> players = gc.GetPlayerList();
         Console.WriteLine("PLAYER : ");
+        
         //getplayerhand.count
         foreach (var p in players)
         {
             int cardCount = gc.PlayerHandCount(p);
-            
             Console.WriteLine($"{p.Name.PadRight(15).ToUpper()} : {cardCount}");
         }
         Console.WriteLine("=======================================");
@@ -88,7 +87,7 @@ public class ConsoleDisplay
     //show player hand card
     public static void ShowHand(GameController gc)
     {
-        //getplayerhand.currentplayer
+        //getplayerhand currentplayer
         List<ICard> playerCards = gc.GetCurrentPlayerHand();
         
         Console.WriteLine("Kartu Kamu : ");
@@ -101,11 +100,10 @@ public class ConsoleDisplay
     }
     public static int GetPlayerChoice(int handCount)
     {
-       
         //bikin conditonal dari pilihan player, passing ke playerturn
         while (true)
         {
-            Console.Write($"\nPilih nomor kartu (1-{handCount}): ");
+            Console.WriteLine($"Pilih nomor kartu (1-{handCount}): ");
             if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= handCount)
             {
                 return choice;
@@ -121,11 +119,11 @@ public class ConsoleDisplay
     public static void ShowPenaltyMessage(string playerName, int amount, string reason)
     {
 
-        Console.WriteLine("\n========================================");
-        Console.WriteLine($"[PENALTY] : {playerName} terkena efek {reason}!");
+        Console.WriteLine("========================================");
+        Console.WriteLine($"[PENALTY] : {playerName.ToUpper()} terkena {reason}!");
         Console.WriteLine($"[+] Menambah {amount} kartu ke tangan.");
         Console.WriteLine($"[!] Giliran {playerName} dilewati!");
-        Console.WriteLine("========================================");
+        
         Console.WriteLine("Tekan ENTER untuk lanjut...");
         Console.ReadLine();
     }
@@ -133,6 +131,7 @@ public class ConsoleDisplay
     //show color pick
     public static CardColor ShowColorPick ()
     {
+        Console.WriteLine("========================================");
         Console.WriteLine("Pilih Warna");
         Console.WriteLine("1. Red");
         Console.WriteLine("2. Blue");
@@ -154,14 +153,14 @@ public class ConsoleDisplay
     //draw message 
     public static void ShowDrawMessage()
     {
-        // Kalau GAK ADA yang cocok, langsung draw
-        Console.WriteLine("\n>>> Gak ada kartu cocok! Tekan ENTER untuk ambil kartu... <<<");
+        // Kalau ga ada yang cocok, langsung draw
+        Console.WriteLine(">>> Gak ada kartu cocok! Tekan ENTER untuk ambil kartu... <<<");
     }
 
     public static void ShowDrawResult(ICard card, bool isMatch)
     {
-        string cardLabel = (int)card.CardType < 10 ? ((int)card.CardType).ToString() : card.CardType.ToString();
-        Console.WriteLine($"\n[DRAW] Anda mendapatkan: [{cardLabel} {card.CardColor}]");
+        string cardLabel = GetCardLabel(card);
+        Console.WriteLine($"[DRAW] Anda mendapatkan: [{cardLabel} {card.CardColor}]");
         
         if (isMatch)
         {

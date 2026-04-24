@@ -1,5 +1,6 @@
-namespace UNOGame.Models;
 using UNOGame.Enums;
+namespace UNOGame.Models;
+
 
 public interface ICard
 {
