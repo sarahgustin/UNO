@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UNOGame.Enums;
 using UNOGame.Logic;
 using UNOGame.Models;
@@ -7,8 +7,8 @@ using UNOGame.UI;
 namespace UNOGame;
 class UNOGame
 {   
-    
-    static List<ICard> GenerateFullDeck(List<ICard> cards)
+    //tambah kartu
+    static List<ICard> GenerateFullDeck()
     {
         List<ICard> fullDeck = new List<ICard>();
         CardColor[] cardColor = { CardColor.Red, CardColor.Blue, CardColor.Green, CardColor.Yellow };
@@ -44,80 +44,54 @@ class UNOGame
     }
     static void Main(string[] args)
     {
-        //REVISI : Di main cuma ada bikin object 
+        int menuChoice =  ConsoleDisplay.ShowMenu();
+        if (menuChoice == 1)
+        {
             IBoard board = new Board();
-            List<ICard> allCard = GenerateFullDeck(new List<ICard>());
+            List<ICard> allCard = GenerateFullDeck();
             IDeck deck = new Deck(allCard);
+            List<IPlayer> players = ConsoleDisplay.InitPlayer();
+
+            GameController gc =  new GameController(players, deck, board);
             
-            int menuChoice =  ConsoleDisplay.ShowMenu();
-            if (menuChoice == 1)
+            bool isGameOver = false;
+                
+            //subscribe event buat kalo player menang dan game selesai
+            gc.OnPlayerRunOutCard += (winner) =>
             {
-                List<IPlayer> players = ConsoleDisplay.InitPlayer();
-            
-                GameController gc =  new GameController(players, deck, board);
-        
-                bool isGameOver = false;
+                ConsoleDisplay.ShowWinnerAnnouncement(winner);
+                isGameOver = true;
+            };
                 
-                //subscribe event buat kalo player menang dan game selesai
-                gc.OnPlayerRunOutCard += (winner) =>
+            /*subscribe event */
+            gc.OnRequestColorSelection = ConsoleDisplay.ShowColorPick;
+            gc.OnDeckEmpty += ConsoleDisplay.ShowDeckEmptyMessage;
+            gc.OnDrawFeedback += ConsoleDisplay.ShowDrawResult;
+            gc.OnPlayerPenalty += ConsoleDisplay.ShowPenaltyMessage;
+        
+    
+            //loop game 
+            while (!isGameOver)
+            {
+                ConsoleDisplay.ShowHeader(gc, deck);
+                ConsoleDisplay.ShowPlayerStats(gc);
+                ConsoleDisplay.ShowTopCard(gc);
+                ConsoleDisplay.ShowHand(gc); 
+                           
+                if (gc.CanCurrentPlayerPlay()) 
                 {
-                    ConsoleDisplay.ShowWinnerAnnouncement(winner);
-                    isGameOver = true;
-                };
-                
-                /*subscribe event */
-                gc.OnRequestColorSelection = ConsoleDisplay.ShowColorPick;
-                gc.OnDeckEmpty += ConsoleDisplay.ShowDeckEmptyMessage;
-                gc.OnDrawFeedback += ConsoleDisplay.ShowDrawResult;
-                gc.OnPlayerPenalty += ConsoleDisplay.ShowPenaltyMessage;
-        
-        
-                //loop game 
-                while (!isGameOver)
-                {
-                    Console.Clear();
-        
-                    //Tampil header, buat info topcard, giliran, sama arah jalan
-                    ConsoleDisplay.ShowHeader(gc, board, deck);
-        
-                    //tampil list player dan jumlah kartunya
-                    ConsoleDisplay.ShowPlayerStats(gc);
-        
-                    //tampil list kartu currentplayer di tanga
-                    ConsoleDisplay.ShowHand(gc);
-                    
-                    if (gc.CanCurrentPlayerPlay(board)) 
-                    {
-                        //Kalau ada yang cocok, baru minta input nomor
-                        int choice = ConsoleDisplay.GetPlayerChoice(gc.GetCurrentPlayerHand().Count);
-                        gc.PlayerTurn(board, choice);
-                    }
-                    else 
-                    {
-                        ConsoleDisplay.ShowDrawMessage();
-                        Console.ReadLine();
-                        gc.PlayerTurn(board, null); // Kirim null biar masuk ke logic draw di dalem
-                        //abis ini langsun ke skip 
-                    }
+                    int choice = ConsoleDisplay.GetPlayerChoice(gc.GetCurrentPlayerHand().Count);
+                    gc.PlayerTurn(choice);
                 }
-            }else{
-                Environment.Exit(0);
-            }
+                else 
+                {
+                    ConsoleDisplay.ShowDrawMessage();
+                    Console.ReadLine();
+                    gc.PlayerTurn(null); // Kirim null biar masuk ke logic draw di dalem
+                }
+            }  
+        }else{
+            Environment.Exit(0);
+        }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
