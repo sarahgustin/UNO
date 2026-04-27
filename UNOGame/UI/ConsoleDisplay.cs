@@ -6,14 +6,12 @@ namespace UNOGame.UI;
 public class ConsoleDisplay
 {
     private static int _consoleWidth => Console.WindowWidth;
-
     private static string centerText (string text)
     {
         int leftPadding = (_consoleWidth - text.Length) / 2; 
-       return text.PadLeft(leftPadding + text.Length);
-
+        return text.PadLeft(leftPadding + text.Length);
     }
-    //show menu
+
     public static int ShowMenu()
     {
         Console.WriteLine(new string ('=', _consoleWidth));
@@ -26,20 +24,18 @@ public class ConsoleDisplay
         return Convert.ToInt32(Console.ReadLine());
     }
     
-    //initialize player
     public static List<IPlayer> InitPlayer()
     {
         Console.WriteLine(new string ('=', _consoleWidth));
         List<IPlayer> players = new List<IPlayer>();
 
         int count = 0;
-        while (count < 2 || count > 4) // Syarat minimal 2, maksimal 4
+        while (count < 2 || count > 4)
         {
             Console.Write("Masukkan jumlah pemain (2-4): ");
             int.TryParse(Console.ReadLine(), out count);
         }
 
-        //masukin player yang di assgin ke list player.
         for (int i = 1; i <= count; i++)
         {
             Console.WriteLine($"Masukan Nama Player ke-{i} : ");
@@ -50,15 +46,12 @@ public class ConsoleDisplay
         return players;
     }
 
-    //card type nya biar jadi string
     private static string GetCardLabel(ICard card)
     {
-        //Kalau 0-9, return angkanya. Kalau >= 10, return nama aslinya (Skip, Wild, reverse)
         return (int)card.CardType < 10 ? ((int)card.CardType).ToString() : card.CardType.ToString();
     }
 
-    //warna buat card color nyaa
-        private static ConsoleColor GetColor (CardColor color)
+    private static ConsoleColor GetColor (CardColor color)
     {
         return color switch
         {
@@ -71,13 +64,9 @@ public class ConsoleDisplay
         };
     }   
     
-    //showheader
     public static void ShowHeader(GameController gc, IDeck deck)
     {
-      
-        //getcurrentPlayer
         IPlayer currentPlayer = gc.GetCurrentPlayer();
-        //GetClockIsWise
         bool isClockwise = gc.GetIsClockwise();
 
         string headerText = "UNO CONSOLE GAME";
@@ -93,25 +82,20 @@ public class ConsoleDisplay
 
     public static void ShowTopCard(GameController gc)
     {
-          //ukuran console
         int cardwidth = 16;
         int leftPadding = (_consoleWidth - cardwidth) /2;
         string leftPad = new string(' ' , leftPadding);
 
-        //gettopcard
         ICard topCard = gc.GetTopCard();
         
-        //atas kartu
         Console.WriteLine(leftPad + "┌────────────────┐");
 
-        //kiri atas kartu
         Console.Write(leftPad + "│");
         Console.ForegroundColor = GetColor(topCard.CardColor);
         Console.Write(topCard.CardColor.ToString().PadRight(cardwidth));
         Console.ResetColor();
         Console.WriteLine("│");
 
-        //tengah kartu
         Console.WriteLine($"{leftPad}│{"".PadRight(cardwidth)}│");
         Console.WriteLine($"{leftPad}│{"".PadRight(cardwidth)}│");
         string value = GetCardLabel(topCard);
@@ -133,15 +117,11 @@ public class ConsoleDisplay
         Console.WriteLine(leftPad + "└────────────────┘");
     }
 
- 
-    //show player stats
     public static void ShowPlayerStats(GameController gc)
     {
-        //getplayerlist
         List<IPlayer> players = gc.GetPlayerList();
         Console.WriteLine("PLAYER : ");
         
-        //getplayerhand.count
         foreach (var p in players)
         {
             int cardCount = gc.PlayerHandCount(p);
@@ -149,27 +129,22 @@ public class ConsoleDisplay
             if(cardCount == 1)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(" [UNO]");
+                Console.Write(" [UNO]");
                 Console.ResetColor();
             }
             Console.WriteLine();
         }
-        Console.WriteLine();
         Console.WriteLine(new string ('=', _consoleWidth));
     }
-    
-    //show player hand card
+
     public static void ShowHand(GameController gc)
     {
         Console.WriteLine(new string ('=', _consoleWidth));
         
-        //getplayerhand currentplayer
         List<ICard> playerCards = gc.GetCurrentPlayerHand();
-
         Console.WriteLine("Kartu Kamu : ");
 
         int cardwidth = 16;
-        //bikin tampilan piliaan kartu pake nomor
         foreach(var card in playerCards)
         {
             Console.Write("┌────────────────┐ ");
@@ -177,7 +152,6 @@ public class ConsoleDisplay
         Console.WriteLine();
         foreach(var card in playerCards)
         {
-            //kiri atas kartu
             Console.Write("│");
             Console.ForegroundColor = GetColor(card.CardColor);
             Console.Write(card.CardColor.ToString().PadRight(cardwidth));
@@ -245,7 +219,6 @@ public class ConsoleDisplay
 
     public static int GetPlayerChoice(int handCount)
     {
-        //bikin conditonal dari pilihan player, passing ke playerturn
         while (true)
         {
             Console.WriteLine($"Pilih nomor kartu (1-{handCount}): ");
@@ -260,7 +233,7 @@ public class ConsoleDisplay
             
         }
     }
-    //show penalty message
+
     public static void ShowPenaltyMessage(string playerName, int amount, string reason)
     {
 
@@ -273,7 +246,6 @@ public class ConsoleDisplay
         Console.ReadLine();
     }
     
-    //show color pick
     public static CardColor ShowColorPick ()
     {
         Console.WriteLine("========================================");
@@ -295,10 +267,8 @@ public class ConsoleDisplay
         };
     }
     
-    //draw message 
     public static void ShowDrawMessage()
     {
-        // Kalau ga ada yang cocok, langsung draw
         Console.WriteLine(">>> Gak ada kartu cocok! Tekan ENTER untuk ambil kartu... <<<");
     }
 
@@ -317,8 +287,7 @@ public class ConsoleDisplay
         }
         Console.ReadLine();
     }
-    
-    //even handler
+
     public static void ShowDeckEmptyMessage()
     {
         Console.WriteLine("============================");
@@ -332,11 +301,13 @@ public class ConsoleDisplay
         string winnerText = $"SELAMAT {winner.Name.ToUpper()} ADALAH PEMENANGNYA!";
         string winnerReason ="SEMUA KARTU DITANGAN SUDAH HABIS.";
         string endText = "Game Selesai! Tekan Enter untuk keluar.";
+        Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine(new string ('*', _consoleWidth));
         Console.WriteLine(centerText(winnerText));
         Console.WriteLine(centerText(winnerReason));
         Console.WriteLine(new string ('*', _consoleWidth));
         Console.WriteLine(centerText(endText));
+        Console.ResetColor();
         Console.ReadLine();
     }
 }

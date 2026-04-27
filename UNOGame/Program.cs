@@ -7,21 +7,17 @@ using UNOGame.UI;
 namespace UNOGame;
 class UNOGame
 {   
-    //tambah kartu
     static List<ICard> GenerateFullDeck()
     {
         List<ICard> fullDeck = new List<ICard>();
-        CardColor[] cardColor = { CardColor.Red, CardColor.Blue, CardColor.Green, CardColor.Yellow };
+        CardColor[] cardColor = {CardColor.Red, CardColor.Blue, CardColor.Green, CardColor.Yellow };
 
         foreach (var color in cardColor)
         {
-            //masukin kartu warna 0, 1 kartu perwarna
             fullDeck.Add(new Card(color, CardType.Zero));
             
-            //masukin kartu 1-9 untuk tiap warna
             for (int i = 1; i <= 9; i++)
             {
-                // Casting angka i jadi CardType enum biar dapet One, Two, dll. 
                 CardType numberType = (CardType)i;
                 fullDeck.Add(new Card(color, numberType));
                 fullDeck.Add(new Card(color, numberType));
@@ -56,21 +52,17 @@ class UNOGame
             
             bool isGameOver = false;
                 
-            //subscribe event buat kalo player menang dan game selesai
             gc.OnPlayerRunOutCard += (winner) =>
             {
                 ConsoleDisplay.ShowWinnerAnnouncement(winner);
                 isGameOver = true;
             };
                 
-            /*subscribe event */
             gc.OnRequestColorSelection = ConsoleDisplay.ShowColorPick;
             gc.OnDeckEmpty += ConsoleDisplay.ShowDeckEmptyMessage;
             gc.OnDrawFeedback += ConsoleDisplay.ShowDrawResult;
             gc.OnPlayerPenalty += ConsoleDisplay.ShowPenaltyMessage;
         
-    
-            //loop game 
             while (!isGameOver)
             {
                 ConsoleDisplay.ShowHeader(gc, deck);
@@ -87,7 +79,7 @@ class UNOGame
                 {
                     ConsoleDisplay.ShowDrawMessage();
                     Console.ReadLine();
-                    gc.PlayerTurn(null); // Kirim null biar masuk ke logic draw di dalem
+                    gc.PlayerTurn(null);
                 }
             }  
         }else{
