@@ -6,10 +6,11 @@ namespace UNOGame.Logic;
 public class GameController
 {
     private readonly Dictionary<IPlayer, List<ICard>> _players;
-    private bool _isClockWise;
+    public bool IsClockWise { get; set; } = true;
     private IPlayer _currentPlayer;
     private IDeck _gameDeck;
     private IBoard _gameBoard;
+    
     
     public Func<CardColor> OnRequestColorSelection;
     public event Action<string, int, string> OnPlayerPenalty;
@@ -35,23 +36,22 @@ public class GameController
         }
         
         _currentPlayer = players[0];
-        _isClockWise = true;
+        IsClockWise = true;
 
-        _gameBoard.UsedCards.Add(DrawCard());
-
-        ICard startCard = GetTopCard();
+        ICard startCard = DrawCard();
         while (startCard.CardType == CardType.Wild || startCard.CardType == CardType.WildDraw ||
-            startCard.CardType == CardType.Draw || startCard.CardType == CardType.Reverse || 
+            startCard.CardType == CardType.Draw || startCard.CardType == CardType.Reverse ||
             startCard.CardType == CardType.Skip)
         {
-            _gameBoard.UsedCards.Remove(startCard);
             deck.Cards.Add(startCard);
             ShuffleDeck();
             startCard = DrawCard();
-            _gameBoard.UsedCards.Add(startCard);
+            
         }
+        _gameBoard.UsedCards.Add(startCard);
     }
 
+    public IDeck GetDeck => _gameDeck;
     public List<IPlayer> GetPlayerList(){ 
         Dictionary<IPlayer, List<ICard>>.KeyCollection playersKeys = _players.Keys;
         List<IPlayer> players = playersKeys.ToList();
@@ -60,13 +60,12 @@ public class GameController
     public List<ICard> GetCurrentPlayerHand() => _players[_currentPlayer];
     public IPlayer GetCurrentPlayer() => _currentPlayer;
     public IPlayer GetNextPlayer(){
-
-        var players = GetPlayerList();
-        int currentIndex = players.IndexOf(_currentPlayer);
+        List<IPlayer> players = GetPlayerList();
+        int currentIndex = players.FindIndex(player => player == _currentPlayer);
         int playerCount = players.Count;
         int nextIndex;
 
-        if(_isClockWise)
+        if(IsClockWise)
         {
             nextIndex = (currentIndex + 1 ) % playerCount;
         }
@@ -76,7 +75,6 @@ public class GameController
         }
         return players[nextIndex];
     }
-    
     public ICard GetTopCard () {
         if(_gameBoard.UsedCards.Count > 0)
         {
@@ -86,13 +84,13 @@ public class GameController
         return null;        
     }
 
-    public bool GetIsClockwise() => _isClockWise;
+    public bool GetIsClockwise() => IsClockWise;
     private void ReverseDirection()
     {
         if (_players.Count == 2) {
             _currentPlayer = GetNextPlayer(); 
         } else {
-            _isClockWise = !_isClockWise;
+            IsClockWise = !IsClockWise;
         }
     }
     private void SkipNextPlayer()
@@ -122,7 +120,6 @@ public class GameController
             _players[victim].Add(penaltyCard);
         }
     }
-    
     public ICard DrawCard()
     {
         if(_gameDeck.Cards.Count == 0)
@@ -256,7 +253,7 @@ public class GameController
     { 
         return _players[player].Count;
     }
-     
+   
    private void GameEnd(IPlayer winner)
    {
        OnPlayerRunOutCard.Invoke(winner);

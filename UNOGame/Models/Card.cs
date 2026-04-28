@@ -1,7 +1,7 @@
 using UNOGame.Enums;
 
 namespace UNOGame.Models;
-class Card : ICard
+public class Card : ICard
 {
     public CardColor CardColor { get; set; }
     public CardType CardType { get; private set; }

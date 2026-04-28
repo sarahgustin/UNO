@@ -1,6 +1,6 @@
 namespace UNOGame.Models;
 
-class Player : IPlayer
+public class Player : IPlayer
 {
     public string Name {get; set;}
     public Player(string Name)

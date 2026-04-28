@@ -1,6 +1,6 @@
 namespace UNOGame.Models;
 
-class Deck : IDeck
+public class Deck : IDeck
 {
     public List <ICard> Cards {get; set;} = new List<ICard>();
 
