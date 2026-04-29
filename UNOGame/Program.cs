@@ -42,8 +42,13 @@ class UNOGame
     static void Main(string[] args)
     {
         Log.Logger = new LoggerConfiguration()
-            .WriteTo.Console()
-            .WriteTo.File("logs/unogame.json", rollingInterval: RollingInterval.Day)
+            .MinimumLevel.Debug()
+            .WriteTo.Console(outputTemplate:
+                "[{Timestamp:yyyy-MM-dd HH:mm:ss}] [{Level:u3}] [{Message:lj}{NewLine}{Exception}]")
+            .WriteTo.File("logs/unogame-.json", rollingInterval: RollingInterval.Day, 
+                outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}] [{Level:u3}] [{Message:lj}{NewLine}{Exception}]")
+            .WriteTo.File(new Serilog.Formatting.Json.JsonFormatter(),"logs/unogame-json-.json",
+                rollingInterval : RollingInterval.Day)
             .CreateLogger();
 
         int menuChoice =  ConsoleDisplay.ShowMenu();

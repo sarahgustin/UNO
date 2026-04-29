@@ -1,6 +1,7 @@
 using UNOGame.Models;
 using UNOGame.Logic;
 using UNOGame.Enums;
+using Serilog;
 namespace UNOGame.UI;
 
 public class ConsoleDisplay
@@ -14,6 +15,7 @@ public class ConsoleDisplay
 
     public static int ShowMenu()
     {
+        Console.WriteLine();
         Console.WriteLine(new string ('=', _consoleWidth));
         string welcomeText = "WELCOME TO UNO CONSOLE GAME!";
         Console.WriteLine(centerText(welcomeText));
@@ -26,6 +28,7 @@ public class ConsoleDisplay
     
     public static List<IPlayer> InitPlayer()
     {
+        Console.WriteLine();
         Console.WriteLine(new string ('=', _consoleWidth));
         List<IPlayer> players = new List<IPlayer>();
 
@@ -229,6 +232,8 @@ public class ConsoleDisplay
             else
             {
                 Console.WriteLine("Input salah! Masukkan angka sesuai nomor kartu.");
+                Log.Warning("Input kartu tidak valid. Ulang input kartu!");
+
             }
             
         }

@@ -26,7 +26,6 @@ public class GameController
         _players = new Dictionary<IPlayer, List<ICard>>();
         
         Log.Information("Game UNO dimulai dengan {PlayerCount} pemain. Arah awal: {Direction}", players.Count, IsClockWise ? "Clockwise" : "Counter-Clockwise");
-        
         ShuffleDeck();
 
         foreach (var player in players)
@@ -36,8 +35,8 @@ public class GameController
             for (int i = 0; i < 7; i++)
             {
                 _players[player].Add(DrawCard());
-                Log.Debug("Pemain terdaftar : {PlayerName}, Jumlah kartu : {CardCount}", player.Name, _players[player].Count);
             }
+            Log.Information("Pemain terdaftar : {PlayerName}, Jumlah kartu : {CardCount}", player.Name, _players[player].Count);
         }
         
         _currentPlayer = players[0];
@@ -51,9 +50,10 @@ public class GameController
             deck.Cards.Add(startCard);
             ShuffleDeck();
             startCard = DrawCard();
-            
+            Log.Debug("Simpan kartu pertama di board. Top Card : {CardColor} {CardType}", startCard.CardColor, startCard.CardType);
         }
         _gameBoard.UsedCards.Add(startCard);
+        Log.Information("Kartu Pertama di Board: {CardColor} {CardType}", startCard.CardColor, startCard.CardType);
     }
 
     public IDeck GetDeck => _gameDeck;
@@ -84,8 +84,10 @@ public class GameController
         if(_gameBoard.UsedCards.Count > 0)
         {
             ICard topCard = _gameBoard.UsedCards [_gameBoard.UsedCards.Count - 1];
+            Log.Information("Cek Top Card : {TopCard.Color} {TopCard.Type}", topCard.CardColor, topCard.CardType);
             return topCard;
         }
+        Log.Warning("Tidak ada kartu di board!");
         return null;        
     }
 
@@ -105,7 +107,6 @@ public class GameController
 
     private void HandleWildCard(CardColor newColor) 
     {
-
         ICard topCard = GetTopCard();
         topCard.CardColor = newColor;
 
@@ -116,7 +117,7 @@ public class GameController
             DrawPenalty(penaltyAmount, GetNextPlayer());            
             SkipNextPlayer();
             OnPlayerPenalty?.Invoke(victim.Name, penaltyAmount, "Wild Draw +4");
-            Log.Error("Penalty Alert! {PlayerName} terkena pinalti {PenaltyType} sebanyak {DrawAmount} kartu", victim.Name, CardType.WildDraw, penaltyAmount);
+            Log.Warning("Penalty Alert! {PlayerName} terkena pinalti {PenaltyType} sebanyak {DrawAmount} kartu", victim.Name, CardType.WildDraw, penaltyAmount);
         }
     }
     private void DrawPenalty(int amount ,  IPlayer victim) 
@@ -131,9 +132,10 @@ public class GameController
     {
         if(_gameDeck.Cards.Count == 0)
         {        
-            Log.Warning("Kartu di Deck habis. Refill kartu dari tumpukan kartu yang sudah terpakai!");
+            Log.Warning("Kartu di Deck habis. Refill kartu dari tumpukan kartu yang sudah terpakai! Deck: {DeckCount} Kartu", _gameDeck.Cards.Count);
             OnDeckEmpty?.Invoke();
             RefillDeck(); 
+            Log.Debug("Kartu di Deck telah terisi kembali. Deck: {DeckCount} Kartu", _gameDeck.Cards.Count);
         }
         ICard drawnCard = _gameDeck.Cards [0];
         _gameDeck.Cards.RemoveAt(0);
@@ -180,7 +182,7 @@ public class GameController
     
     public void PlayerTurn(int? choice = null)
     {
-        Log.Information("Giliran pemain: {PlayerName}. Sisa kartu: {HandCount}", _currentPlayer.Name, _players[_currentPlayer].Count);
+        Log.Information("Giliran memainkan kartu. Player: {PlayerName}, Sisa kartu: {HandCount}", _currentPlayer.Name, _players[_currentPlayer].Count);
         if (choice.HasValue)
         {
             int index = choice.Value - 1;
@@ -191,7 +193,7 @@ public class GameController
         {
            ICard newCard = DrawCard();
            _players[_currentPlayer].Add(newCard);
-           Log.Information("{PlayerName} mendaptkan kartu draw : {newCardColor}{newCardType}",_currentPlayer.Name, newCard.CardColor, newCard.CardType);
+           Log.Warning("Mendapatkan kartu draw. Player : {PlayerName}, Kartu Draw : {newCardColor} {newCardType}",_currentPlayer.Name, newCard.CardColor, newCard.CardType);
            
            bool isMatch = IsPlaceableOnTop(newCard);
            
@@ -199,11 +201,15 @@ public class GameController
 
            if (IsPlaceableOnTop(newCard))
            {
+                Log.Information("Kartu draw cocok. Player : {PlayerName}, Kartu Draw :{newCardColor} {newCardType}, Kartu Top : {topCardColor} {topCardType}",
+                    _currentPlayer.Name, newCard.CardColor, newCard.CardType, GetTopCard().CardColor,GetTopCard().CardType);
                PlacedCard(newCard);
                
            }
            else
            {
+                Log.Warning("Kartu draw tidak cocok, pemain akan dilewati. Player : {PlayerName}, Kartu Draw :{newCardColor} {newCardType}, Kartu Top : {topCardColor} {topCardType}",
+                    _currentPlayer.Name, newCard.CardColor, newCard.CardType, GetTopCard().CardColor,GetTopCard().CardType);
                _currentPlayer = GetNextPlayer();
            }
            
@@ -212,7 +218,7 @@ public class GameController
     
     public void PlacedCard(ICard selectedCard)
     {
-        Log.Information("{PlayerName} memainkan kartu {CardColor} {CardType}", _currentPlayer.Name, selectedCard.CardColor, selectedCard.CardType);
+        Log.Information("Memainkan Kartu. Player {PlayerName}, Kartu pilihan : {CardColor} {CardType}", _currentPlayer.Name, selectedCard.CardColor, selectedCard.CardType);
         IPlayer currentPlayer = _currentPlayer;
         _players[currentPlayer].Remove(selectedCard);
          
@@ -227,44 +233,43 @@ public class GameController
             {
                 ReverseDirection();
 
-                Log.Warning("Action Card:  {SelectedCardColor} {SelectedCardType}. Giliran main berubah.", selectedCard.CardColor, selectedCard.CardType);
+                Log.Warning("Giliran main player berubah. Action Card:  {SelectedCardColor} {SelectedCardType}", selectedCard.CardColor, selectedCard.CardType);
             }else if (selectedCard.CardType == CardType.Skip)
             {
                 SkipNextPlayer();
 
-                Log.Warning("Action Card:  {SelectedCardColor} {SelectedCardType}. Pemain selanjutnya di-skip.", selectedCard.CardColor, selectedCard.CardType);
+                Log.Warning("Player selanjutnya dilewati. Action Card:  {SelectedCardColor} {SelectedCardType}, Player Selanjutnya : {NextPlayerName}", selectedCard.CardColor, selectedCard.CardType, GetNextPlayer().Name);
             
             }else if (selectedCard.CardType == CardType.Draw)
             {   
-                Log.Warning("Action Card: {SelectedCardColor} {SelectedCardType}. {NextPlayer} akan mendapatkan 2 kartu draw dan giliran akan dilewati.", selectedCard.CardColor, selectedCard.CardType GetNextPlayer().Name);
+                Log.Warning("Penalty Alert! player selanjutnya akan mendapatkan kartu draw. Action Card: {SelectedCardColor} {SelectedCardType}.", selectedCard.CardColor, selectedCard.CardType);
                 int penaltyAmount = 2;
                 DrawPenalty(penaltyAmount, GetNextPlayer());
                 OnPlayerPenalty?.Invoke(GetNextPlayer().Name, penaltyAmount, "Draw +2");
                 SkipNextPlayer();
 
-                Log.Error("Penalty : {PlayerName} terkena pinalti {PenaltyType} sebanyak {DrawAmount} kartu", GetNextPlayer().Name, selectedCard.CardType, penaltyAmount);
-                
+                Log.Warning("Penalty : {PlayerName} terkena pinalti {PenaltyType} sebanyak {DrawAmount} kartu", GetNextPlayer().Name, selectedCard.CardType, penaltyAmount);  
             }
             _currentPlayer = GetNextPlayer();
         }
 
         else if(selectedCard.CardType == CardType.Wild || selectedCard.CardType == CardType.WildDraw)
         { 
-            Log.Warning("Action Card: {SelectedCardColor} {SelectedCardType}. {CurrentPlayer} memilih warna kartu.", selectedCard.CardColor, selectedCard.CardType, _currentPlayer.Name);
+            Log.Warning("Wild Card! {PlayerName} memainkan kartu {CardType} dan harus memilih warna.", _currentPlayer.Name, selectedCard.CardType );
             
             CardColor chosenColor = OnRequestColorSelection.Invoke();
             selectedCard.CardColor = chosenColor;
 
-            Log.Information("Pemain {PlayerName} mengubah warna menjadi {NewColor}", _currentPlayer.Name, chosenColor);        
+            Log.Information("Warna kartu telah berubah. Player : {PlayerName} mengubah warna menjadi {NewColor}", _currentPlayer.Name.ToUpper(), chosenColor);        
 
             HandleWildCard(chosenColor);
-            _currentPlayer = GetNextPlayer();
+            _currentPlayer = GetNextPlayer(); 
         }
         
         if (_players[currentPlayer].Count == 0)
         {
             GameEnd(currentPlayer);
-            Log.Information("PERMAINAN SELESAI Pemenangnya adalah {WinnerName}", currentPlayer.Name);
+            Log.Information("PERMAINAN SELESAI! Pemenangnya adalah {WinnerName}", currentPlayer.Name.ToUpper());
 
         }
     }
