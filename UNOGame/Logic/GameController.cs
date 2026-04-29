@@ -1,5 +1,7 @@
 using UNOGame.Enums;
 using UNOGame.Models;
+using Serilog;
+using Serilog.Events;
 
 namespace UNOGame.Logic;
 
@@ -22,7 +24,9 @@ public class GameController
         _gameDeck = deck;
         _gameBoard = board;
         _players = new Dictionary<IPlayer, List<ICard>>();
-
+        
+        Log.Information("Game UNO dimulai dengan {PlayerCount} pemain. Arah awal: {Direction}", players.Count, IsClockWise ? "Clockwise" : "Counter-Clockwise");
+        
         ShuffleDeck();
 
         foreach (var player in players)
@@ -32,6 +36,7 @@ public class GameController
             for (int i = 0; i < 7; i++)
             {
                 _players[player].Add(DrawCard());
+                Log.Debug("Pemain terdaftar : {PlayerName}, Jumlah kartu : {CardCount}", player.Name, _players[player].Count);
             }
         }
         
@@ -100,6 +105,7 @@ public class GameController
 
     private void HandleWildCard(CardColor newColor) 
     {
+
         ICard topCard = GetTopCard();
         topCard.CardColor = newColor;
 
@@ -109,7 +115,8 @@ public class GameController
             int penaltyAmount = 4;
             DrawPenalty(penaltyAmount, GetNextPlayer());            
             SkipNextPlayer();
-            OnPlayerPenalty.Invoke(victim.Name, penaltyAmount, "Wild Draw +4");
+            OnPlayerPenalty?.Invoke(victim.Name, penaltyAmount, "Wild Draw +4");
+            Log.Error("Penalty Alert! {PlayerName} terkena pinalti {PenaltyType} sebanyak {DrawAmount} kartu", victim.Name, CardType.WildDraw, penaltyAmount);
         }
     }
     private void DrawPenalty(int amount ,  IPlayer victim) 
@@ -123,8 +130,9 @@ public class GameController
     public ICard DrawCard()
     {
         if(_gameDeck.Cards.Count == 0)
-        {
-            OnDeckEmpty.Invoke();
+        {        
+            Log.Warning("Kartu di Deck habis. Refill kartu dari tumpukan kartu yang sudah terpakai!");
+            OnDeckEmpty?.Invoke();
             RefillDeck(); 
         }
         ICard drawnCard = _gameDeck.Cards [0];
@@ -172,6 +180,7 @@ public class GameController
     
     public void PlayerTurn(int? choice = null)
     {
+        Log.Information("Giliran pemain: {PlayerName}. Sisa kartu: {HandCount}", _currentPlayer.Name, _players[_currentPlayer].Count);
         if (choice.HasValue)
         {
             int index = choice.Value - 1;
@@ -182,13 +191,16 @@ public class GameController
         {
            ICard newCard = DrawCard();
            _players[_currentPlayer].Add(newCard);
+           Log.Information("{PlayerName} mendaptkan kartu draw : {newCardColor}{newCardType}",_currentPlayer.Name, newCard.CardColor, newCard.CardType);
            
            bool isMatch = IsPlaceableOnTop(newCard);
            
-           OnDrawFeedback.Invoke(newCard, isMatch);
+           OnDrawFeedback?.Invoke(newCard, isMatch);
+
            if (IsPlaceableOnTop(newCard))
            {
                PlacedCard(newCard);
+               
            }
            else
            {
@@ -200,6 +212,7 @@ public class GameController
     
     public void PlacedCard(ICard selectedCard)
     {
+        Log.Information("{PlayerName} memainkan kartu {CardColor} {CardType}", _currentPlayer.Name, selectedCard.CardColor, selectedCard.CardType);
         IPlayer currentPlayer = _currentPlayer;
         _players[currentPlayer].Remove(selectedCard);
          
@@ -213,23 +226,37 @@ public class GameController
             if (selectedCard .CardType == CardType.Reverse)
             {
                 ReverseDirection();
+
+                Log.Warning("Action Card:  {SelectedCardColor} {SelectedCardType}. Giliran main berubah.", selectedCard.CardColor, selectedCard.CardType);
             }else if (selectedCard.CardType == CardType.Skip)
             {
                 SkipNextPlayer();
+
+                Log.Warning("Action Card:  {SelectedCardColor} {SelectedCardType}. Pemain selanjutnya di-skip.", selectedCard.CardColor, selectedCard.CardType);
+            
             }else if (selectedCard.CardType == CardType.Draw)
-            {
+            {   
+                Log.Warning("Action Card: {SelectedCardColor} {SelectedCardType}. {NextPlayer} akan mendapatkan 2 kartu draw dan giliran akan dilewati.", selectedCard.CardColor, selectedCard.CardType GetNextPlayer().Name);
                 int penaltyAmount = 2;
                 DrawPenalty(penaltyAmount, GetNextPlayer());
-                OnPlayerPenalty.Invoke(GetNextPlayer().Name, penaltyAmount, "Draw +2");
+                OnPlayerPenalty?.Invoke(GetNextPlayer().Name, penaltyAmount, "Draw +2");
                 SkipNextPlayer();
+
+                Log.Error("Penalty : {PlayerName} terkena pinalti {PenaltyType} sebanyak {DrawAmount} kartu", GetNextPlayer().Name, selectedCard.CardType, penaltyAmount);
+                
             }
             _currentPlayer = GetNextPlayer();
         }
 
         else if(selectedCard.CardType == CardType.Wild || selectedCard.CardType == CardType.WildDraw)
         { 
+            Log.Warning("Action Card: {SelectedCardColor} {SelectedCardType}. {CurrentPlayer} memilih warna kartu.", selectedCard.CardColor, selectedCard.CardType, _currentPlayer.Name);
+            
             CardColor chosenColor = OnRequestColorSelection.Invoke();
             selectedCard.CardColor = chosenColor;
+
+            Log.Information("Pemain {PlayerName} mengubah warna menjadi {NewColor}", _currentPlayer.Name, chosenColor);        
+
             HandleWildCard(chosenColor);
             _currentPlayer = GetNextPlayer();
         }
@@ -237,10 +264,12 @@ public class GameController
         if (_players[currentPlayer].Count == 0)
         {
             GameEnd(currentPlayer);
+            Log.Information("PERMAINAN SELESAI Pemenangnya adalah {WinnerName}", currentPlayer.Name);
+
         }
     }
     
-    public bool IsPlaceableOnTop(ICard card) 
+    private bool IsPlaceableOnTop(ICard card) 
     {
         ICard topCard = GetTopCard();
         
@@ -256,6 +285,6 @@ public class GameController
    
    private void GameEnd(IPlayer winner)
    {
-       OnPlayerRunOutCard.Invoke(winner);
+       OnPlayerRunOutCard?.Invoke(winner);
    }
 }

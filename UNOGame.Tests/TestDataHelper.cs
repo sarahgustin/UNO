@@ -31,10 +31,10 @@ public static class TestDataHelper
                 fullDeck.Add(new Card(color, CardType.Draw));   
             }
         }
-        for (int i = 1; i <= 2; i++)
+        for (int i = 1; i <= 4; i++)
         {
             fullDeck.Add(new Card(CardColor.Black, CardType.Wild));
-            fullDeck.Add(new Card(CardColor.Black, CardType.Wild));
+            fullDeck.Add(new Card(CardColor.Black, CardType.WildDraw));
         }
         
         return fullDeck;

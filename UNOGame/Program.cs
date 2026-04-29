@@ -1,8 +1,9 @@
-﻿using System;
-using UNOGame.Enums;
+﻿using UNOGame.Enums;
 using UNOGame.Logic;
 using UNOGame.Models;
 using UNOGame.UI;
+using Serilog;
+
 
 namespace UNOGame;
 class UNOGame
@@ -30,19 +31,25 @@ class UNOGame
                 fullDeck.Add(new Card(color, CardType.Draw));   
             }
         }
-        for (int i = 1; i <= 2; i++)
+        for (int i = 1; i <= 4; i++)
         {
             fullDeck.Add(new Card(CardColor.Black, CardType.Wild));
-            fullDeck.Add(new Card(CardColor.Black, CardType.Wild));
+            fullDeck.Add(new Card(CardColor.Black, CardType.WildDraw));
         }
         
         return fullDeck;
     }
     static void Main(string[] args)
     {
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .WriteTo.File("logs/unogame.json", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+
         int menuChoice =  ConsoleDisplay.ShowMenu();
         if (menuChoice == 1)
         {
+            Log.Information("Aplikasi Game UNO dimulai");
             IBoard board = new Board();
             List<ICard> allCard = GenerateFullDeck();
             IDeck deck = new Deck(allCard);

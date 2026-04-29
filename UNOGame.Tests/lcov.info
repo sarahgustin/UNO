@@ -1,0 +1,813 @@
+SF:D:\sar's\BC - SE FORMULATRIX\UNO\UNOGame\Program.cs
+FN:10,System.Collections.Generic.List`1<UNOGame.Models.ICard> UNOGame.UNOGame::GenerateFullDeck()
+FNDA:0,System.Collections.Generic.List`1<UNOGame.Models.ICard> UNOGame.UNOGame::GenerateFullDeck()
+DA:11,0
+DA:12,0
+DA:13,0
+DA:15,0
+DA:16,0
+DA:17,0
+DA:19,0
+DA:20,0
+DA:21,0
+DA:22,0
+DA:23,0
+DA:24,0
+DA:26,0
+DA:27,0
+DA:28,0
+DA:29,0
+DA:30,0
+DA:31,0
+DA:32,0
+DA:33,0
+DA:34,0
+DA:35,0
+DA:36,0
+DA:37,0
+DA:39,0
+DA:40,0
+BRDA:15,204,1,0
+BRDA:19,118,1,0
+BRDA:19,118,0,0
+BRDA:26,193,1,0
+BRDA:26,193,0,0
+BRDA:15,204,0,0
+BRDA:33,264,1,0
+BRDA:33,264,0,0
+FN:41,System.Void UNOGame.UNOGame::Main(System.String[])
+FNDA:0,System.Void UNOGame.UNOGame::Main(System.String[])
+DA:42,0
+DA:43,0
+DA:44,0
+DA:45,0
+DA:46,0
+DA:47,0
+DA:48,0
+DA:49,0
+DA:51,0
+DA:53,0
+DA:55,0
+DA:56,0
+DA:57,0
+DA:58,0
+DA:59,0
+DA:61,0
+DA:62,0
+DA:63,0
+DA:64,0
+DA:66,0
+DA:67,0
+DA:68,0
+DA:69,0
+DA:70,0
+DA:71,0
+DA:73,0
+DA:74,0
+DA:75,0
+DA:76,0
+DA:77,0
+DA:79,0
+DA:80,0
+DA:81,0
+DA:82,0
+DA:83,0
+DA:84,0
+DA:85,0
+DA:86,0
+DA:87,0
+DA:88,0
+BRDA:44,13,0,0
+BRDA:66,366,1,0
+BRDA:73,280,0,0
+BRDA:73,280,1,0
+BRDA:66,366,0,0
+BRDA:44,13,1,0
+LF:66
+LH:0
+BRF:14
+BRH:0
+FNF:2
+FNH:0
+end_of_record
+SF:D:\sar's\BC - SE FORMULATRIX\UNO\UNOGame\UI\ConsoleDisplay.cs
+FN:7,System.Int32 UNOGame.UI.ConsoleDisplay::get__consoleWidth()
+FNDA:0,System.Int32 UNOGame.UI.ConsoleDisplay::get__consoleWidth()
+DA:8,0
+FN:9,System.String UNOGame.UI.ConsoleDisplay::centerText(System.String)
+FNDA:0,System.String UNOGame.UI.ConsoleDisplay::centerText(System.String)
+DA:10,0
+DA:11,0
+DA:12,0
+DA:13,0
+FN:15,System.Int32 UNOGame.UI.ConsoleDisplay::ShowMenu()
+FNDA:0,System.Int32 UNOGame.UI.ConsoleDisplay::ShowMenu()
+DA:16,0
+DA:17,0
+DA:18,0
+DA:19,0
+DA:20,0
+DA:21,0
+DA:22,0
+DA:23,0
+DA:24,0
+DA:25,0
+FN:27,System.Collections.Generic.List`1<UNOGame.Models.IPlayer> UNOGame.UI.ConsoleDisplay::InitPlayer()
+FNDA:0,System.Collections.Generic.List`1<UNOGame.Models.IPlayer> UNOGame.UI.ConsoleDisplay::InitPlayer()
+DA:28,0
+DA:29,0
+DA:30,0
+DA:32,0
+DA:33,0
+DA:34,0
+DA:35,0
+DA:36,0
+DA:37,0
+DA:39,0
+DA:40,0
+DA:41,0
+DA:42,0
+DA:44,0
+DA:45,0
+DA:46,0
+DA:47,0
+BRDA:33,68,1,0
+BRDA:33,57,0,0
+BRDA:33,57,1,0
+BRDA:33,68,0,0
+BRDA:39,179,1,0
+BRDA:42,139,0,0
+BRDA:42,139,1,0
+BRDA:39,179,0,0
+FN:49,System.String UNOGame.UI.ConsoleDisplay::GetCardLabel(UNOGame.Models.ICard)
+FNDA:0,System.String UNOGame.UI.ConsoleDisplay::GetCardLabel(UNOGame.Models.ICard)
+DA:50,0
+DA:51,0
+DA:52,0
+BRDA:51,9,0,0
+BRDA:51,9,1,0
+FN:54,System.ConsoleColor UNOGame.UI.ConsoleDisplay::GetColor(UNOGame.Enums.CardColor)
+FNDA:0,System.ConsoleColor UNOGame.UI.ConsoleDisplay::GetColor(UNOGame.Enums.CardColor)
+DA:55,0
+DA:56,0
+DA:57,0
+DA:58,0
+DA:59,0
+DA:60,0
+DA:61,0
+DA:62,0
+DA:63,0
+DA:64,0
+DA:65,0
+BRDA:56,6,1,0
+BRDA:56,6,3,0
+BRDA:56,6,2,0
+BRDA:56,6,4,0
+BRDA:56,6,5,0
+BRDA:56,6,0,0
+FN:67,System.Void UNOGame.UI.ConsoleDisplay::ShowHeader(UNOGame.Logic.GameController,UNOGame.Models.IDeck)
+FNDA:0,System.Void UNOGame.UI.ConsoleDisplay::ShowHeader(UNOGame.Logic.GameController,UNOGame.Models.IDeck)
+DA:68,0
+DA:69,0
+DA:70,0
+DA:72,0
+DA:74,0
+DA:75,0
+DA:76,0
+DA:77,0
+DA:78,0
+DA:79,0
+DA:80,0
+DA:81,0
+BRDA:79,175,0,0
+BRDA:79,175,1,0
+FN:83,System.Void UNOGame.UI.ConsoleDisplay::ShowTopCard(UNOGame.Logic.GameController)
+FNDA:0,System.Void UNOGame.UI.ConsoleDisplay::ShowTopCard(UNOGame.Logic.GameController)
+DA:84,0
+DA:85,0
+DA:86,0
+DA:87,0
+DA:89,0
+DA:91,0
+DA:93,0
+DA:94,0
+DA:95,0
+DA:96,0
+DA:97,0
+DA:99,0
+DA:100,0
+DA:101,0
+DA:102,0
+DA:103,0
+DA:104,0
+DA:105,0
+DA:106,0
+DA:108,0
+DA:109,0
+DA:112,0
+DA:113,0
+DA:114,0
+DA:115,0
+DA:116,0
+DA:117,0
+DA:118,0
+FN:120,System.Void UNOGame.UI.ConsoleDisplay::ShowPlayerStats(UNOGame.Logic.GameController)
+FNDA:0,System.Void UNOGame.UI.ConsoleDisplay::ShowPlayerStats(UNOGame.Logic.GameController)
+DA:121,0
+DA:122,0
+DA:123,0
+DA:125,0
+DA:126,0
+DA:127,0
+DA:128,0
+DA:129,0
+DA:130,0
+DA:131,0
+DA:132,0
+DA:133,0
+DA:134,0
+DA:135,0
+DA:136,0
+DA:137,0
+DA:138,0
+BRDA:125,184,1,0
+BRDA:129,141,0,0
+BRDA:129,141,1,0
+BRDA:125,184,0,0
+FN:140,System.Void UNOGame.UI.ConsoleDisplay::ShowHand(UNOGame.Logic.GameController)
+FNDA:0,System.Void UNOGame.UI.ConsoleDisplay::ShowHand(UNOGame.Logic.GameController)
+DA:141,0
+DA:142,0
+DA:144,0
+DA:145,0
+DA:147,0
+DA:148,0
+DA:149,0
+DA:150,0
+DA:151,0
+DA:152,0
+DA:153,0
+DA:154,0
+DA:155,0
+DA:156,0
+DA:157,0
+DA:158,0
+DA:159,0
+DA:160,0
+DA:161,0
+DA:163,0
+DA:164,0
+DA:165,0
+DA:166,0
+DA:167,0
+DA:168,0
+DA:169,0
+DA:170,0
+DA:173,0
+DA:174,0
+DA:175,0
+DA:176,0
+DA:177,0
+DA:178,0
+DA:179,0
+DA:180,0
+DA:181,0
+DA:182,0
+DA:184,0
+DA:185,0
+DA:186,0
+DA:187,0
+DA:188,0
+DA:189,0
+DA:190,0
+DA:191,0
+DA:195,0
+DA:196,0
+DA:197,0
+DA:198,0
+DA:199,0
+DA:200,0
+DA:201,0
+DA:202,0
+DA:203,0
+DA:205,0
+DA:206,0
+DA:207,0
+DA:208,0
+DA:209,0
+DA:211,0
+DA:212,0
+DA:213,0
+DA:214,0
+DA:215,0
+DA:216,0
+DA:217,0
+DA:218,0
+BRDA:148,79,1,0
+BRDA:148,79,0,0
+BRDA:153,213,1,0
+BRDA:153,213,0,0
+BRDA:163,349,1,0
+BRDA:165,305,1,0
+BRDA:165,305,0,0
+BRDA:163,349,0,0
+BRDA:173,465,1,0
+BRDA:173,465,0,0
+BRDA:184,601,1,0
+BRDA:186,557,1,0
+BRDA:186,557,0,0
+BRDA:184,601,0,0
+BRDA:195,712,1,0
+BRDA:195,712,0,0
+BRDA:205,777,1,0
+BRDA:205,777,0,0
+BRDA:212,932,1,0
+BRDA:212,932,0,0
+FN:220,System.Int32 UNOGame.UI.ConsoleDisplay::GetPlayerChoice(System.Int32)
+FNDA:0,System.Int32 UNOGame.UI.ConsoleDisplay::GetPlayerChoice(System.Int32)
+DA:221,0
+DA:222,0
+DA:223,0
+DA:224,0
+DA:225,0
+DA:226,0
+DA:227,0
+DA:230,0
+DA:231,0
+DA:232,0
+DA:234,0
+DA:235,0
+BRDA:225,74,0,0
+BRDA:225,78,0,0
+BRDA:225,74,1,0
+BRDA:225,78,1,0
+BRDA:225,92,0,0
+BRDA:225,92,1,0
+FN:237,System.Void UNOGame.UI.ConsoleDisplay::ShowPenaltyMessage(System.String,System.Int32,System.String)
+FNDA:0,System.Void UNOGame.UI.ConsoleDisplay::ShowPenaltyMessage(System.String,System.Int32,System.String)
+DA:238,0
+DA:240,0
+DA:241,0
+DA:242,0
+DA:243,0
+DA:245,0
+DA:246,0
+DA:247,0
+FN:249,UNOGame.Enums.CardColor UNOGame.UI.ConsoleDisplay::ShowColorPick()
+FNDA:0,UNOGame.Enums.CardColor UNOGame.UI.ConsoleDisplay::ShowColorPick()
+DA:250,0
+DA:251,0
+DA:252,0
+DA:253,0
+DA:254,0
+DA:255,0
+DA:256,0
+DA:257,0
+DA:258,0
+DA:260,0
+DA:261,0
+DA:262,0
+DA:263,0
+DA:264,0
+DA:265,0
+DA:266,0
+DA:267,0
+DA:268,0
+BRDA:260,96,1,0
+BRDA:260,96,2,0
+BRDA:260,96,3,0
+BRDA:260,96,4,0
+BRDA:260,96,0,0
+FN:270,System.Void UNOGame.UI.ConsoleDisplay::ShowDrawMessage()
+FNDA:0,System.Void UNOGame.UI.ConsoleDisplay::ShowDrawMessage()
+DA:271,0
+DA:272,0
+DA:273,0
+FN:275,System.Void UNOGame.UI.ConsoleDisplay::ShowDrawResult(UNOGame.Models.ICard,System.Boolean)
+FNDA:0,System.Void UNOGame.UI.ConsoleDisplay::ShowDrawResult(UNOGame.Models.ICard,System.Boolean)
+DA:276,0
+DA:277,0
+DA:278,0
+DA:280,0
+DA:281,0
+DA:282,0
+DA:283,0
+DA:285,0
+DA:286,0
+DA:287,0
+DA:288,0
+DA:289,0
+BRDA:280,96,0,0
+BRDA:280,96,1,0
+FN:291,System.Void UNOGame.UI.ConsoleDisplay::ShowDeckEmptyMessage()
+FNDA:0,System.Void UNOGame.UI.ConsoleDisplay::ShowDeckEmptyMessage()
+DA:292,0
+DA:293,0
+DA:294,0
+DA:295,0
+DA:296,0
+DA:297,0
+FN:299,System.Void UNOGame.UI.ConsoleDisplay::ShowWinnerAnnouncement(UNOGame.Models.IPlayer)
+FNDA:0,System.Void UNOGame.UI.ConsoleDisplay::ShowWinnerAnnouncement(UNOGame.Models.IPlayer)
+DA:300,0
+DA:301,0
+DA:302,0
+DA:303,0
+DA:304,0
+DA:305,0
+DA:306,0
+DA:307,0
+DA:308,0
+DA:309,0
+DA:310,0
+DA:311,0
+DA:312,0
+LF:242
+LH:0
+BRF:55
+BRH:0
+FNF:17
+FNH:0
+end_of_record
+SF:D:\sar's\BC - SE FORMULATRIX\UNO\UNOGame\Models\Board.cs
+FN:4,System.Collections.Generic.List`1<UNOGame.Models.ICard> UNOGame.Models.Board::get_UsedCards()
+FNDA:113,System.Collections.Generic.List`1<UNOGame.Models.ICard> UNOGame.Models.Board::get_UsedCards()
+DA:5,113
+FN:6,System.Void UNOGame.Models.Board::.ctor()
+FNDA:19,System.Void UNOGame.Models.Board::.ctor()
+DA:7,19
+DA:8,19
+DA:10,19
+LF:4
+LH:4
+BRF:0
+BRH:0
+FNF:2
+FNH:2
+end_of_record
+SF:D:\sar's\BC - SE FORMULATRIX\UNO\UNOGame\Models\Card.cs
+FN:5,UNOGame.Enums.CardColor UNOGame.Models.Card::get_CardColor()
+FNDA:4542,UNOGame.Enums.CardColor UNOGame.Models.Card::get_CardColor()
+DA:6,4542
+FN:6,UNOGame.Enums.CardType UNOGame.Models.Card::get_CardType()
+FNDA:4606,UNOGame.Enums.CardType UNOGame.Models.Card::get_CardType()
+DA:7,4606
+FN:8,System.Void UNOGame.Models.Card::.ctor(UNOGame.Enums.CardColor,UNOGame.Enums.CardType)
+FNDA:4104,System.Void UNOGame.Models.Card::.ctor(UNOGame.Enums.CardColor,UNOGame.Enums.CardType)
+DA:9,4104
+DA:10,4104
+DA:11,4104
+DA:12,4104
+DA:13,4104
+LF:7
+LH:7
+BRF:0
+BRH:0
+FNF:3
+FNH:3
+end_of_record
+SF:D:\sar's\BC - SE FORMULATRIX\UNO\UNOGame\Models\Deck.cs
+FN:4,System.Collections.Generic.List`1<UNOGame.Models.ICard> UNOGame.Models.Deck::get_Cards()
+FNDA:12936,System.Collections.Generic.List`1<UNOGame.Models.ICard> UNOGame.Models.Deck::get_Cards()
+DA:5,12936
+FN:6,System.Void UNOGame.Models.Deck::.ctor(System.Collections.Generic.List`1<UNOGame.Models.ICard>)
+FNDA:19,System.Void UNOGame.Models.Deck::.ctor(System.Collections.Generic.List`1<UNOGame.Models.ICard>)
+DA:7,19
+DA:8,19
+DA:9,19
+DA:10,19
+LF:5
+LH:5
+BRF:0
+BRH:0
+FNF:2
+FNH:2
+end_of_record
+SF:D:\sar's\BC - SE FORMULATRIX\UNO\UNOGame\Models\Player.cs
+FN:4,System.String UNOGame.Models.Player::get_Name()
+FNDA:59,System.String UNOGame.Models.Player::get_Name()
+DA:5,59
+FN:5,System.Void UNOGame.Models.Player::.ctor(System.String)
+FNDA:59,System.Void UNOGame.Models.Player::.ctor(System.String)
+DA:6,59
+DA:7,59
+DA:8,59
+DA:9,59
+LF:5
+LH:5
+BRF:0
+BRH:0
+FNF:2
+FNH:2
+end_of_record
+SF:D:\sar's\BC - SE FORMULATRIX\UNO\UNOGame\Logic\GameController.cs
+FN:8,System.Boolean UNOGame.Logic.GameController::get_IsClockWise()
+FNDA:47,System.Boolean UNOGame.Logic.GameController::get_IsClockWise()
+DA:9,47
+FN:53,UNOGame.Models.IDeck UNOGame.Logic.GameController::get_GetDeck()
+FNDA:1,UNOGame.Models.IDeck UNOGame.Logic.GameController::get_GetDeck()
+DA:54,1
+FN:54,System.Collections.Generic.List`1<UNOGame.Models.IPlayer> UNOGame.Logic.GameController::GetPlayerList()
+FNDA:8,System.Collections.Generic.List`1<UNOGame.Models.IPlayer> UNOGame.Logic.GameController::GetPlayerList()
+DA:55,8
+DA:56,8
+DA:57,8
+DA:58,8
+DA:59,8
+FN:59,System.Collections.Generic.List`1<UNOGame.Models.ICard> UNOGame.Logic.GameController::GetCurrentPlayerHand()
+FNDA:7,System.Collections.Generic.List`1<UNOGame.Models.ICard> UNOGame.Logic.GameController::GetCurrentPlayerHand()
+DA:60,7
+FN:60,UNOGame.Models.IPlayer UNOGame.Logic.GameController::GetCurrentPlayer()
+FNDA:8,UNOGame.Models.IPlayer UNOGame.Logic.GameController::GetCurrentPlayer()
+DA:61,8
+FN:61,UNOGame.Models.IPlayer UNOGame.Logic.GameController::GetNextPlayer()
+FNDA:5,UNOGame.Models.IPlayer UNOGame.Logic.GameController::GetNextPlayer()
+DA:62,5
+DA:63,5
+DA:64,10
+DA:65,5
+DA:68,5
+DA:69,4
+DA:70,4
+DA:71,4
+DA:73,1
+DA:74,1
+DA:75,1
+DA:76,5
+DA:77,5
+BRDA:68,44,0,4
+BRDA:68,44,1,1
+FN:77,UNOGame.Models.ICard UNOGame.Logic.GameController::GetTopCard()
+FNDA:16,UNOGame.Models.ICard UNOGame.Logic.GameController::GetTopCard()
+DA:78,16
+DA:79,16
+DA:80,15
+DA:81,15
+DA:82,15
+DA:84,1
+DA:85,16
+BRDA:79,22,0,15
+BRDA:79,22,1,1
+FN:86,System.Boolean UNOGame.Logic.GameController::GetIsClockwise()
+FNDA:2,System.Boolean UNOGame.Logic.GameController::GetIsClockwise()
+DA:87,2
+FN:88,System.Void UNOGame.Logic.GameController::ReverseDirection()
+FNDA:0,System.Void UNOGame.Logic.GameController::ReverseDirection()
+DA:89,0
+DA:90,0
+DA:91,0
+DA:92,0
+DA:93,0
+DA:94,0
+DA:95,0
+BRDA:90,17,0,0
+BRDA:90,17,1,0
+FN:96,System.Void UNOGame.Logic.GameController::SkipNextPlayer()
+FNDA:0,System.Void UNOGame.Logic.GameController::SkipNextPlayer()
+DA:97,0
+DA:98,0
+DA:99,0
+FN:101,System.Void UNOGame.Logic.GameController::HandleWildCard(UNOGame.Enums.CardColor)
+FNDA:0,System.Void UNOGame.Logic.GameController::HandleWildCard(UNOGame.Enums.CardColor)
+DA:102,0
+DA:103,0
+DA:104,0
+DA:106,0
+DA:107,0
+DA:108,0
+DA:109,0
+DA:110,0
+DA:111,0
+DA:112,0
+DA:113,0
+DA:114,0
+BRDA:106,28,0,0
+BRDA:106,28,1,0
+FN:115,System.Void UNOGame.Logic.GameController::DrawPenalty(System.Int32,UNOGame.Models.IPlayer)
+FNDA:0,System.Void UNOGame.Logic.GameController::DrawPenalty(System.Int32,UNOGame.Models.IPlayer)
+DA:116,0
+DA:117,0
+DA:118,0
+DA:119,0
+DA:120,0
+DA:121,0
+DA:122,0
+BRDA:117,43,1,0
+BRDA:117,43,0,0
+FN:123,UNOGame.Models.ICard UNOGame.Logic.GameController::DrawCard()
+FNDA:447,UNOGame.Models.ICard UNOGame.Logic.GameController::DrawCard()
+DA:124,447
+DA:125,447
+DA:126,2
+DA:127,2
+DA:128,2
+DA:129,2
+DA:130,447
+DA:131,447
+DA:133,447
+DA:134,447
+BRDA:125,22,0,2
+BRDA:127,32,0,2
+BRDA:127,32,1,0
+BRDA:125,22,1,447
+FN:136,System.Void UNOGame.Logic.GameController::ShuffleDeck()
+FNDA:31,System.Void UNOGame.Logic.GameController::ShuffleDeck()
+DA:137,31
+DA:138,31
+DA:139,31
+DA:141,2907
+DA:142,2876
+DA:143,2876
+DA:144,2876
+DA:145,2876
+DA:146,2876
+DA:147,31
+BRDA:141,138,1,2876
+BRDA:141,138,0,31
+FN:148,System.Void UNOGame.Logic.GameController::RefillDeck()
+FNDA:2,System.Void UNOGame.Logic.GameController::RefillDeck()
+DA:149,2
+DA:150,2
+DA:151,2
+DA:153,18
+DA:154,6
+DA:155,6
+DA:156,1
+DA:157,1
+DA:158,1
+DA:159,6
+DA:161,2
+DA:162,2
+DA:163,2
+DA:165,2
+DA:166,2
+BRDA:153,100,1,6
+BRDA:155,63,0,5
+BRDA:155,63,1,1
+BRDA:155,80,0,1
+BRDA:155,80,1,6
+BRDA:153,100,0,2
+FN:168,System.Boolean UNOGame.Logic.GameController::CanCurrentPlayerPlay()
+FNDA:3,System.Boolean UNOGame.Logic.GameController::CanCurrentPlayerPlay()
+DA:169,3
+DA:170,6
+DA:171,3
+FN:173,System.Void UNOGame.Logic.GameController::PlayerTurn(System.Nullable`1<System.Int32>)
+FNDA:3,System.Void UNOGame.Logic.GameController::PlayerTurn(System.Nullable`1<System.Int32>)
+DA:174,3
+DA:175,3
+DA:176,1
+DA:177,1
+DA:178,1
+DA:179,1
+DA:180,1
+DA:182,2
+DA:183,2
+DA:184,2
+DA:186,2
+DA:188,2
+DA:189,2
+DA:190,1
+DA:191,1
+DA:192,1
+DA:194,1
+DA:195,1
+DA:196,1
+DA:198,2
+DA:199,3
+BRDA:175,10,0,1
+BRDA:175,10,1,2
+BRDA:188,106,0,2
+BRDA:188,106,1,0
+BRDA:189,131,0,1
+BRDA:189,131,1,1
+FN:201,System.Void UNOGame.Logic.GameController::PlacedCard(UNOGame.Models.ICard)
+FNDA:2,System.Void UNOGame.Logic.GameController::PlacedCard(UNOGame.Models.ICard)
+DA:202,2
+DA:203,2
+DA:204,2
+DA:206,2
+DA:208,2
+DA:209,2
+DA:211,2
+DA:212,2
+DA:213,2
+DA:214,0
+DA:215,0
+DA:216,2
+DA:217,0
+DA:218,0
+DA:219,2
+DA:220,0
+DA:221,0
+DA:222,0
+DA:223,0
+DA:224,0
+DA:225,0
+DA:226,2
+DA:227,2
+DA:229,0
+DA:230,0
+DA:231,0
+DA:232,0
+DA:233,0
+DA:234,0
+DA:235,0
+DA:237,2
+DA:238,1
+DA:239,1
+DA:240,1
+DA:241,2
+BRDA:211,73,0,2
+BRDA:211,73,1,0
+BRDA:211,93,0,2
+BRDA:213,111,0,0
+BRDA:213,111,1,2
+BRDA:216,138,0,0
+BRDA:216,138,1,2
+BRDA:219,165,0,0
+BRDA:219,165,1,2
+BRDA:211,93,1,0
+BRDA:229,247,0,0
+BRDA:229,247,1,0
+BRDA:229,266,0,0
+BRDA:229,266,1,2
+BRDA:237,337,0,1
+BRDA:237,337,1,2
+FN:243,System.Boolean UNOGame.Logic.GameController::IsPlaceableOnTop(UNOGame.Models.ICard)
+FNDA:7,System.Boolean UNOGame.Logic.GameController::IsPlaceableOnTop(UNOGame.Models.ICard)
+DA:244,7
+DA:245,7
+DA:247,7
+DA:248,7
+DA:249,7
+DA:250,7
+DA:251,7
+BRDA:247,20,0,6
+BRDA:247,34,0,4
+BRDA:247,44,0,3
+BRDA:247,20,1,4
+BRDA:247,34,1,4
+BRDA:247,44,1,4
+FN:252,System.Int32 UNOGame.Logic.GameController::PlayerHandCount(UNOGame.Models.IPlayer)
+FNDA:0,System.Int32 UNOGame.Logic.GameController::PlayerHandCount(UNOGame.Models.IPlayer)
+DA:253,0
+DA:254,0
+DA:255,0
+FN:257,System.Void UNOGame.Logic.GameController::GameEnd(UNOGame.Models.IPlayer)
+FNDA:1,System.Void UNOGame.Logic.GameController::GameEnd(UNOGame.Models.IPlayer)
+DA:258,1
+DA:259,1
+DA:260,1
+BRDA:259,8,0,1
+BRDA:259,8,1,0
+FN:19,System.Void UNOGame.Logic.GameController::.ctor(System.Collections.Generic.List`1<UNOGame.Models.IPlayer>,UNOGame.Models.IDeck,UNOGame.Models.IBoard)
+FNDA:19,System.Void UNOGame.Logic.GameController::.ctor(System.Collections.Generic.List`1<UNOGame.Models.IPlayer>,UNOGame.Models.IDeck,UNOGame.Models.IBoard)
+DA:20,19
+DA:21,19
+DA:22,19
+DA:23,19
+DA:24,19
+DA:26,19
+DA:28,175
+DA:29,59
+DA:30,59
+DA:32,944
+DA:33,413
+DA:34,413
+DA:35,413
+DA:36,59
+DA:38,19
+DA:39,19
+DA:41,19
+DA:42,29
+DA:43,29
+DA:44,29
+DA:45,10
+DA:46,10
+DA:47,10
+DA:48,10
+DA:50,10
+DA:51,19
+DA:52,19
+BRDA:28,136,1,59
+BRDA:32,126,1,413
+BRDA:32,126,0,59
+BRDA:28,136,0,19
+BRDA:42,271,1,10
+BRDA:42,222,0,29
+BRDA:42,232,0,28
+BRDA:42,242,0,25
+BRDA:42,252,0,23
+BRDA:42,222,1,6
+BRDA:42,232,1,6
+BRDA:42,242,1,6
+BRDA:42,252,1,6
+BRDA:42,271,0,19
+LF:193
+LH:144
+BRF:66
+BRH:49
+FNF:22
+FNH:17
+end_of_record
